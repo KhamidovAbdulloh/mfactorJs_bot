@@ -1,6 +1,6 @@
 // valid firstname func
 const isValidfullName = (firstName) => {
-    return /^([A-z,',]{2,})+(\s)[A-z,',]{2,}$/.test(firstName);
+    return /^[A-Z][a-z]{2,}(?: [A-Z][a-z]{2,})+$/.test(firstName);
 };
 
 // valid phone func
