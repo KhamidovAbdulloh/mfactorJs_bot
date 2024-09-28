@@ -1,12 +1,10 @@
 const { Bot, Context, session, Keyboard, InlineKeyboard } = require('grammy');
 const mongoose = require('mongoose');
 const express = require('express');
-const crypto = require('crypto');
-const { type } = require('express/lib/response');
 require('dotenv').config()
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.DATABASE_URI);
 
 // Define a user schema
 const userSchema = new mongoose.Schema(
@@ -32,7 +30,7 @@ const bot = new Bot(token);
 
 const app = express();
 app.use(express.json());
-const port = 3000;
+const port = +(process.env.PORT || 3000);
 
 // Middleware to store session data
 bot.use(session({
@@ -57,7 +55,7 @@ bot.command('help', async (ctx) => {
     ctx.reply('Kurslarni olish uchun ro\'yxatdan o\'ting')
 })
 
-bot.command('start', async (ctx, next) => {
+bot.command('start', async (ctx) => {
     ctx.session.data = {};
     ctx.session.data[ctx.chat.id] = "askPhone"; 
     const user = await User.findOne({chat_id: ctx.chat.id})
