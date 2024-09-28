@@ -88,50 +88,52 @@ bot.on("message", async (ctx) => {
             }
         });
     } else if (userStep === "askPhone") {
-      const phoneNumber = ctx.message.text.trim();
-      if (isValidPhoneNumber(phoneNumber)) { // Regex to validate phone numbers
-        ctx.session.data[ctx.chat.id] = "askName"; // Proceed to the next step
-        await User.findOneAndUpdate({ chat_id: ctx.chat.id }, {
-            phone_number: phoneNumber
-        })
-        ctx.session.data[ctx.chat.id] = "askFullname";
-        ctx.reply("Ism va familiyangizni kiriting.\n Misol: Ibrohim Ismogilov", {
-          reply_markup: {
-                  remove_keyboard: true
-              }
-          });
-      } else {
+        if(!ctx.message || !ctx.message.text) return;
+        const phoneNumber = ctx.message.text.trim();
+        if (isValidPhoneNumber(phoneNumber)) { // Regex to validate phone numbers
+            ctx.session.data[ctx.chat.id] = "askName"; // Proceed to the next step
+            await User.findOneAndUpdate({ chat_id: ctx.chat.id }, {
+                phone_number: phoneNumber
+            })
+            ctx.session.data[ctx.chat.id] = "askFullname";
+            ctx.reply("Ism va familiyangizni kiriting.\n Misol: Ibrohim Ismogilov", {
+            reply_markup: {
+                    remove_keyboard: true
+                }
+            });
+    } else {
         ctx.reply("Iltimos to'g'ri ishlaydigan \n raqamingizni kiriting");
-      }
+        }
     } else if (userStep === "askFullname") {
-      const fullName = ctx.message.text.trim();
-      if (isValidfullName(fullName)) { // Regex to validate fullName
-        // Save full name and thank the user
-        await User.findOneAndUpdate({ chat_id: ctx.chat.id }, {
-          fullName: fullName
-        })
-        await ctx.reply(`Tabriklaymiz ${fullName}! \n Siz ro'yxatdan muvaffaqiyatli o'tdingiz.`);
-        // Send button to open the Mini App
-        await ctx.reply("Kurslarni ko'rish uchun quyidagi \n tugmani bosing:", {
-          reply_markup: {
-              inline_keyboard: [
-                  [{ text: "Kurslarni ko'rish", url: 'https://ielts.org' }]
-              ]
-          }
-        });
-        //delete ctx.session.data[ctx.chat.id]; // Reset the user's state
-      } else {
+        if(!ctx.message || !ctx.message.text) return;
+        const fullName = ctx.message.text.trim();
+        if (isValidfullName(fullName)) { // Regex to validate fullName
+            // Save full name and thank the user
+            await User.findOneAndUpdate({ chat_id: ctx.chat.id }, {
+            fullName: fullName
+            })
+            await ctx.reply(`Tabriklaymiz ${fullName}! \n Siz ro'yxatdan muvaffaqiyatli o'tdingiz.`);
+            // Send button to open the Mini App
+            await ctx.reply("Kurslarni ko'rish uchun quyidagi \n tugmani bosing:", {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Kurslarni ko'rish", url: 'https://ielts.org' }]
+                ]
+            }
+            });
+            //delete ctx.session.data[ctx.chat.id]; // Reset the user's state
+    } else {
         ctx.reply("Iltimos ism va familiyangizni \n to'g'ri formatda kiriting \n Misol: Ibrohim Ismogilov");
-      }
-  }
-  });
+    }
+    }
+    });
 
-// valid firstname f
+// valid firstname func
 const isValidfullName = (firstName) => {
     return /^([A-z,',]{2,})+(\s)[A-z,',]{2,}$/.test(firstName);
 };
 
-// valid phone fuction
+// valid phone func
 const isValidPhoneNumber = (phoneNumber) => {
     const regex = /^\+998([-])?([ ])?(90|91|93|94|95|98|99|33|97|71|77)([-])?([ ])?(\d{3})([-])?([ ])?(\d{2})([-])?([ ])?(\d{2})$/;
     return regex.test(phoneNumber);
