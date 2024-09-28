@@ -1,29 +1,15 @@
-const { Bot, Context, session, Keyboard, InlineKeyboard } = require('grammy');
+const { Bot, session, Keyboard, InlineKeyboard } = require('grammy');
 const mongoose = require('mongoose');
 const express = require('express');
+const User = require('./models/user');
+const { isValidfullName, isValidPhoneNumber } = require('./utils/validation.phone-name');
 require('dotenv').config()
 
 // Connect to MongoDB
 mongoose.connect(process.env.DATABASE_URI);
 
 // Define a user schema
-const userSchema = new mongoose.Schema(
-    {
-      chat_id: String,
-      fullName: String,
-      phone_number: String,
-      confirmationCode: String,
-      confirmed: { type: Boolean, default: false }
-  
-    },
-    {
-      timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-      },
-    },
-  );
-const User = mongoose.model('User', userSchema);
+
 
 const token = process.env.BOT_TOKEN;
 const bot = new Bot(token);
@@ -127,17 +113,6 @@ bot.on("message", async (ctx) => {
     }
     }
     });
-
-// valid firstname func
-const isValidfullName = (firstName) => {
-    return /^([A-z,',]{2,})+(\s)[A-z,',]{2,}$/.test(firstName);
-};
-
-// valid phone func
-const isValidPhoneNumber = (phoneNumber) => {
-    const regex = /^\+998([-])?([ ])?(90|91|93|94|95|98|99|33|97|71|77)([-])?([ ])?(\d{3})([-])?([ ])?(\d{2})([-])?([ ])?(\d{2})$/;
-    return regex.test(phoneNumber);
-};
 
 bot.start();
 app.listen(port, () => {
