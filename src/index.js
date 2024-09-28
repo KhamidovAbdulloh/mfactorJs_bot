@@ -8,9 +8,6 @@ require('dotenv').config()
 // Connect to MongoDB
 mongoose.connect(process.env.DATABASE_URI);
 
-// Define a user schema
-
-
 const token = process.env.BOT_TOKEN;
 const bot = new Bot(token);
 
@@ -110,9 +107,8 @@ bot.on("message", async (ctx) => {
             //delete ctx.session.data[ctx.chat.id]; // Reset the user's state
     } else {
         ctx.reply("Iltimos ism va familiyangizni \n to'g'ri formatda kiriting \n Misol: Ibrohim Ismogilov");
-    }
-    }
-    });
+    }}
+});
 
 bot.start();
 app.listen(port, () => {
