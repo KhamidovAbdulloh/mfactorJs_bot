@@ -91,6 +91,7 @@ bot.on("message", async (ctx) => {
         if(!ctx.message || !ctx.message.text) return;
         const fullName = ctx.message.text.trim();
         if (isValidfullName(fullName)) { // Regex to validate fullName
+            ctx.session.data[ctx.chat.id] = "startAgainSameUser";
             // Save full name and thank the user
             await User.findOneAndUpdate({ chat_id: ctx.chat.id }, {
             fullName: fullName
@@ -104,11 +105,15 @@ bot.on("message", async (ctx) => {
                 ]
             }
             });
+            
             //delete ctx.session.data[ctx.chat.id]; // Reset the user's state
+    } else if (userStep === "startAgainSameUser") {
+        if(ctx.message || ctx.message.text) return;
     } else {
         ctx.reply("Iltimos ism va familiyangizni \n to'g'ri formatda kiriting \n Misol: Ibrohim Ismogilov");
     }}
 });
+
 
 bot.start();
 app.listen(port, () => {
