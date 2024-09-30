@@ -84,9 +84,9 @@ bot.on("message", async (ctx) => {
                     remove_keyboard: true
                 }
             });
-    } else {
-        ctx.reply("Iltimos to'g'ri ishlaydigan \n raqamingizni kiriting");
-        }
+        } else {
+            ctx.reply("Iltimos to'g'ri ishlaydigan \n raqamingizni kiriting");
+            }
     } else if (userStep === "askFullname") {
         if(!ctx.message || !ctx.message.text) return;
         const fullName = ctx.message.text.trim();
@@ -107,11 +107,22 @@ bot.on("message", async (ctx) => {
             });
             
             //delete ctx.session.data[ctx.chat.id]; // Reset the user's state
+    }  else {
+            ctx.reply("Iltimos ism va familiyangizni \n to'g'ri formatda kiriting \n Misol: Ibrohim Ismogilov");
+        }
     } else if (userStep === "startAgainSameUser") {
-        if(ctx.message || ctx.message.text) return;
-    } else {
-        ctx.reply("Iltimos ism va familiyangizni \n to'g'ri formatda kiriting \n Misol: Ibrohim Ismogilov");
-    }}
+        if(ctx.message || ctx.message.text) {
+            await ctx.reply(`Siz ro'yxatdan muvaffaqiyatli o'tgansiz.`);
+            // Send button to open the Mini App
+            await ctx.reply("Kurslarni ko'rish uchun quyidagi \n tugmani bosing:", {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Kurslarni ko'rish", url: 'https://ielts.org' }]
+                ]
+            }
+            });
+        }
+    }
 });
 
 
